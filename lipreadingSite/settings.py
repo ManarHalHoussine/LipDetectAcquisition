@@ -85,7 +85,6 @@ DATABASES = {
     }
 }
 
-#### token cassic :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
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
