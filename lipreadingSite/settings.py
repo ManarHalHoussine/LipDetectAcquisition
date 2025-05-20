@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'lipreadingSite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'lipreading_db',            # Le nom de ta base
-        'USER': 'ManarHAL',                 # Ton utilisateur MySQL
-        'PASSWORD': 'password', # Ton mot de passe
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'lipreading_db',
+        'USER': 'manaruser',
+        'PASSWORD': 'motdepasse',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '5432',
     }
 }
 

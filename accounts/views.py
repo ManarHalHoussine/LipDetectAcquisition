@@ -40,15 +40,16 @@ def login_view(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            try:
-                username = User.objects.get(email=email).username
-                user = authenticate(request, username=username, password=password)
+            user_obj = User.objects.filter(email=email).first()
+
+            if user_obj:
+                user = authenticate(request, username=user_obj.username, password=password)
                 if user is not None:
                     login(request, user)
                     return redirect('welcome')
                 else:
                     message = 'Email ou mot de passe incorrect.'
-            except User.DoesNotExist:
+            else:
                 message = "Aucun utilisateur avec cet email."
 
     return render(request, 'accounts/login.html', {'form': form, 'message': message})

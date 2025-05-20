@@ -1,5 +1,0 @@
-video_url,audio_url,transcription_url,is_detected,uploaded_at
-/media/http://127.0.0.1:8000/media/temp_videos/blob,,,False,2025-04-30 22:27:18.661902+00:00
-/media/http://127.0.0.1:8000/media/temp_videos/blob,,,False,2025-04-30 22:33:58.472898+00:00
-/media/videos/lips_cropped_19dd2f4d_with_audio_aksyJVp.webm,/media/audios/lips_cropped_19dd2f4d_with_audio.wav,/media/transcriptions/lips_cropped_19dd2f4d_with_audio_grid.txt,True,2025-05-15 09:13:28.243954+00:00
-/media/videos/lips_cropped_e4e657dc_with_audio_jopWA9U.webm,/media/audios/lips_cropped_e4e657dc_with_audio.wav,/media/transcriptions/lips_cropped_e4e657dc_with_audio_grid.txt,True,2025-05-15 09:19:32.723579+00:00
