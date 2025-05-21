@@ -2,7 +2,6 @@ import subprocess
 
 from django.views.decorators.http import require_http_methods
 from moviepy import VideoFileClip
-import whisper
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -287,7 +286,7 @@ def detect_lips(request):
         clip = VideoFileClip(final_output_path)
         audio_path = final_output_path.replace('.webm', '.wav')
         clip.audio.write_audiofile(audio_path, codec='pcm_s16le')
-
+        import whisper
         model = whisper.load_model("base")
         result = model.transcribe(audio_path, word_timestamps=True)
         simple_transcription = result["text"].strip()
