@@ -1,4 +1,4 @@
-/* --- Global Styles --- */
+/* --- Global Styles
 body {
     margin: 0;
     padding: 0;
@@ -8,8 +8,7 @@ body {
     color: #2c003e;
     overflow-x: hidden;
 }
-
-/* --- Intro Animation --- */
+ --- Intro Animation
 h1 {
     font-size: 2.5em;
     margin: 40px 0 20px;
@@ -26,8 +25,8 @@ h1 {
         transform: translateY(0);
     }
 }
-
-/* --- Video Container --- */
+--- */
+/* --- Video -
 .video-container {
     width: 680px;
     max-width: 95%;
@@ -44,7 +43,7 @@ video {
     border-radius: 0;
 }
 
-/* --- Buttons --- */
+/* --- Buttons
 .btn {
     padding: 12px 28px;
     font-size: 16px;
@@ -82,7 +81,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* --- Recording Indicator --- */
+/* --- Recording Indicator -
 #recordingIndicator {
     display: none;
     justify-content: center;
@@ -105,7 +104,7 @@ button:disabled {
     100% { transform: scale(1); }
 }
 
-/* --- Loader --- */
+/* --- Loader
 #loader {
     display: none;
     position: fixed;
@@ -126,7 +125,7 @@ button:disabled {
     100% { transform: rotate(360deg); }
 }
 
-/* --- Notification Popup --- */
+/* --- Notification Popup
 #notification {
     display: none;
     position: fixed;
@@ -140,7 +139,7 @@ button:disabled {
     z-index: 1000;
 }
 
-/* --- Video Gallery --- */
+/* --- Video Gallery
 #videosList {
     max-width: 700px;
     margin: 40px auto;
@@ -152,8 +151,7 @@ button:disabled {
     box-shadow: 0 0 15px rgba(0,0,0,0.15);
 }
 
-#videosList a,
-#videosList button {
+#videosList a, #videosList button {
     display: inline-block;
     margin: 5px;
     background-color: #5a189a;
@@ -166,8 +164,8 @@ button:disabled {
     cursor: pointer;
     transition: background 0.3s ease;
 }
-
 #videosList a:hover,
 #videosList button:hover {
     background-color: #7b2cbf;
 }
+--- */
