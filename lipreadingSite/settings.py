@@ -73,13 +73,13 @@ WSGI_APPLICATION = 'lipreadingSite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'lipreading_db',
         'USER': 'manaruser',
-        'PASSWORD': 'motdepasse',
+        'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
