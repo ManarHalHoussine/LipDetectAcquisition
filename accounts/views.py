@@ -16,9 +16,6 @@ from .forms import LoginForm, RegisterForm
 from .models import Video
 
 import os
-import uuid
-import cv2
-import mediapipe as mp
 
 
 def register_view(request):
@@ -134,6 +131,7 @@ def home(request):
 
 @csrf_exempt
 def upload_video(request):
+
     if request.method == 'POST' and request.FILES.get('video'):
         video_file = request.FILES['video']
         temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp_videos')
@@ -165,6 +163,9 @@ from django.contrib.auth.decorators import login_required
 @csrf_exempt
 @login_required
 def detect_lips(request):
+    import uuid
+    import cv2
+    import mediapipe as mp
     if request.method != 'POST':
         return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
 
