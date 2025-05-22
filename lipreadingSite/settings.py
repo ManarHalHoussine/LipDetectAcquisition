@@ -11,7 +11,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Sécurité
 SECRET_KEY = 'django-insecure-b@cuqcd^=!@5w9yp_69ti1%a+e8!&fk7^d$2ubs)wx606ztm4('
 DEBUG = True  # ⚠️ False en production
-ALLOWED_HOSTS = ['lipdetectacquisition-8.onrender.com']  # à adapter selon ton URL Render
+#ALLOWED_HOSTS = ['lipdetectacquisition-8.onrender.com']  # à adapter selon ton URL Render
 
 # Applications
 INSTALLED_APPS = [
@@ -33,6 +33,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'lipreadingSite.urls'
@@ -75,12 +76,14 @@ USE_I18N = True
 USE_TZ = True
 
 # Fichiers statiques (Render)
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # pour collectstatic
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # si tu utilises un dossier "static/"
-]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'accounts', 'static')]
+
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Médias
 MEDIA_URL = '/media/'
