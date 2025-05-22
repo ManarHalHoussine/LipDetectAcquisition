@@ -11,7 +11,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Sécurité
 SECRET_KEY = 'django-insecure-b@cuqcd^=!@5w9yp_69ti1%a+e8!&fk7^d$2ubs)wx606ztm4('
 DEBUG = True  # ⚠️ False en production
-ALLOWED_HOSTS = ['lipdetectacquisition-2.onrender.com']  # à adapter selon ton URL Render
+ALLOWED_HOSTS = ['lipdetectacquisition-8.onrender.com']  # à adapter selon ton URL Render
 
 # Applications
 INSTALLED_APPS = [

@@ -58,7 +58,7 @@ GRID_VOCAB = {
         'couleur': ['bleu', 'vert', 'rouge', 'blanc'],
         'préposition': ['à', 'près de', 'dans', 'avec'],
         'lettre': ['de A à Z (sans W)'],
-        'chiffre': 'de 1 à 9',
+        'chiffre': ['de 1 à 9'],
         'adverbe': ['encore', 'maintenant', 's’il vous plaît', 'bientôt']
     },
     'en': {
@@ -84,8 +84,8 @@ GRID_VOCAB = {
         'commande': ['ضع', 'رتب', 'انقل', 'جهز'],
         'couleur': ['أزرق', 'أخضر', 'أحمر', 'أبيض'],
         'préposition': ['في', 'عند', 'داخل', 'مع'],
-        'lettre': 'من الألف إلى الياء] ',
-        'chiffre': 'من ١ إلى ٩',
+        'lettre': ['من الألف إلى الياء'],
+        'chiffre': ['من ١ إلى ٩'],
         'adverbe': ['مرة أخرى', 'الآن', 'من فضلك', 'قريباً']
     }
 }
@@ -116,13 +116,14 @@ def home(request):
     langue = request.session.get('langue', 'fr')
     vocabulaire = GRID_VOCAB.get(langue)
 
-    # Récupère les vidéos détectées de l'utilisateur connecté uniquement
-    detected_videos = Video.objects.filter(is_detected=True).order_by('-uploaded_at')
+    # ✅ Filtrer les vidéos par utilisateur connecté
+    detected_videos = Video.objects.filter(user=request.user, is_detected=True).order_by('-uploaded_at')
+
 
     return render(request, 'accounts/home.html', {
-        'vocabulaire': vocabulaire,
-        'langue': langue,
-        'detected_videos': detected_videos,
+            'vocabulaire': vocabulaire,
+            'langue': langue,
+            'detected_videos': detected_videos,
     })
 # ============================
 #  Upload & Détection des lèvres
@@ -366,9 +367,11 @@ def detect_lips(request):
                 open(audio_path, 'rb') as audio_file:
 
             detected_video = Video.objects.create(
+                user=request.user,
                 video_file=File(video_file, name=os.path.basename(final_output_path)),
                 is_detected=True
             )
+
             detected_video.transcription.save(os.path.basename(grid_path), File(transcript_file))
             detected_video.audio_file.save(os.path.basename(audio_path), File(audio_file))
             detected_video.subtitles_file.save(os.path.basename(vtt_path), File(vtt_file))
@@ -429,6 +432,7 @@ def edit_transcription(request, video_id):
             word = request.POST.get(f"word_{i}", "").strip().lower()
             updated_lines.append(f"{start} {end} {word}")
 
+        # Écriture mise à jour du fichier transcription (GRID)
         with open(transcription_path, 'w', encoding='utf-8') as f:
             for i, line in enumerate(updated_lines):
                 if i < len(updated_lines) - 1:
@@ -436,9 +440,54 @@ def edit_transcription(request, video_id):
                 else:
                     f.write(line + "\n")
 
+        # 📌 Mise à jour du fichier VTT
+        vtt_path = transcription_path.replace('_grid.txt', '+align.vtt')
+
+        def format_time(ms):
+            seconds = int(ms) // 1000
+            milliseconds = int(ms) % 1000
+            minutes = seconds // 60
+            hours = minutes // 60
+            return f"{hours:02}:{minutes % 60:02}:{seconds % 60:02}.{milliseconds:03}"
+
+        with open(vtt_path, 'w', encoding='utf-8') as f:
+            f.write("WEBVTT\n\n")
+            for line in updated_lines:
+                parts = line.split()
+                if len(parts) < 3:
+                    continue
+                start, end, word = parts[0], parts[1], " ".join(parts[2:])
+                f.write(f"{format_time(int(start))} --> {format_time(int(end))}\n")
+                f.write(f"{word}\n\n")
+            f.write("END\n")
+
+        # 📎 Enregistrement dans video.subtitles_file
+        with open(vtt_path, 'rb') as vtt_file:
+            video.subtitles_file.save(os.path.basename(vtt_path), File(vtt_file), save=True)
+
         return redirect('home')
 
     return render(request, 'accounts/edit_transcription.html', {
         'video': video,
         'transcription': transcription_lines
     })
+
+def generate_vtt_from_text(text, duration_per_chunk=3, words_per_chunk=5):
+    import datetime
+    import textwrap
+
+    words = text.split()
+    chunks = textwrap.wrap(text, width=words_per_chunk*6, break_long_words=False)
+
+    def format_time(seconds):
+        return str(datetime.timedelta(seconds=seconds)) + '.000'
+
+    vtt_lines = ["WEBVTT\n"]
+    for i, chunk in enumerate(chunks):
+        start = i * duration_per_chunk
+        end = (i + 1) * duration_per_chunk
+        vtt_lines.append(f"{format_time(start)} --> {format_time(end)}")
+        vtt_lines.append(chunk)
+        vtt_lines.append("")
+
+    return "\n".join(vtt_lines)

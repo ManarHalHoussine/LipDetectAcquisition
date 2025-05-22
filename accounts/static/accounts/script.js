@@ -33,7 +33,17 @@ window.addEventListener('DOMContentLoaded', () => {
                 mediaRecorder.start();
                 startBtn.disabled = true;
                 stopBtn.disabled = false;
-                indicator.style.display = 'flex';
+
+                // ✅ Indicateurs visuels
+                indicator.style.display = 'block';
+                startBtn.textContent = "Enregistrement...";
+                document.title = "🔴 Enregistrement en cours...";
+
+                // ✅ Animation de clignotement
+                blinkInterval = setInterval(() => {
+                    recordingCircle.style.opacity = recordingCircle.style.opacity === '1' ? '0' : '1';
+                }, 500);
+
                 startTime = Date.now();
                 timerInterval = setInterval(updateTimer, 1000);
             };
@@ -42,10 +52,17 @@ window.addEventListener('DOMContentLoaded', () => {
                 mediaRecorder.stop();
                 startBtn.disabled = false;
                 stopBtn.disabled = true;
+
+                // ❌ Stop indicateurs visuels
                 indicator.style.display = 'none';
                 clearInterval(timerInterval);
+                clearInterval(blinkInterval);
+                recordingCircle.style.opacity = '1';
                 timer.textContent = "00:00";
+                startBtn.textContent = "Démarrer l'enregistrement";
+                document.title = defaultTitle;
             };
+
 
             setupFaceMesh();
 

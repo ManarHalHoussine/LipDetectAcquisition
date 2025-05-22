@@ -3,33 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <title>Modifier la transcription</title>
+    <style>
+        :root {
+            --primary: #7b2cbf;
+            --primary-dark: #5a189a;
+            --background: #f9f6fd;
+            --text: #333;
+            --border: #ddd;
+            --hover: #e0d4f7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: var(--background);
+            color: var(--text);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary-dark);
+            margin-bottom: 30px;
+        }
+
+        form {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background-color: var(--hover);
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 0.95rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        input[readonly] {
+            background-color: #f0f0f0;
+        }
+
+        .form-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        button, .btn-link {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        button[type="submit"] {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-link {
+            background-color: #e4e4e4;
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-link:hover {
+            background-color: #d0d0d0;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                padding: 20px;
+            }
+
+            th, td {
+                padding: 10px 6px;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            button, .btn-link {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h2>Modifier la transcription</h2>
+<h2>📝 Modifier la transcription</h2>
+
 <form method="POST">
     {% csrf_token %}
     <table>
-        <tr>
-            <th>Début (ms)</th>
-            <th>Fin (ms)</th>
-            <th>Mot</th>
-        </tr>
-        {% for line in transcription %}
+        <thead>
             <tr>
-                <td><input type="text" value="{{ line.start }}" readonly></td>
-                <td><input type="text" value="{{ line.end }}" readonly></td>
-                <td>
-                    <input type="text" name="word_{{ forloop.counter0 }}" value="{{ line.word }}">
-                    <input type="hidden" name="start_{{ forloop.counter0 }}" value="{{ line.start }}">
-                    <input type="hidden" name="end_{{ forloop.counter0 }}" value="{{ line.end }}">
-                </td>
+                <th>Début (ms)</th>
+                <th>Fin (ms)</th>
+                <th>Mot</th>
             </tr>
-        {% endfor %}
+        </thead>
+        <tbody>
+            {% for line in transcription %}
+                <tr>
+                    <td><input type="text" value="{{ line.start }}" readonly></td>
+                    <td><input type="text" value="{{ line.end }}" readonly></td>
+                    <td>
+                        <input type="text" name="word_{{ forloop.counter0 }}" value="{{ line.word }}">
+                        <input type="hidden" name="start_{{ forloop.counter0 }}" value="{{ line.start }}">
+                        <input type="hidden" name="end_{{ forloop.counter0 }}" value="{{ line.end }}">
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
+
     <input type="hidden" name="line_count" value="{{ transcription|length }}">
-    <br>
-    <button type="submit">Enregistrer</button>
-    <a href="{% url 'home' %}"><button type="button">Annuler</button></a>
+
+    <div class="form-buttons">
+        <button type="submit">💾 Enregistrer</button>
+        <a href="{% url 'home' %}" class="btn-link"> Annuler</a>
+    </div>
 </form>
+
 </body>
 </html>
