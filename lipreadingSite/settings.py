@@ -76,6 +76,10 @@ USE_TZ = True
 
 # Fichiers statiques (Render)
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # pour collectstatic
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # si tu utilises un dossier "static/"
+]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Médias

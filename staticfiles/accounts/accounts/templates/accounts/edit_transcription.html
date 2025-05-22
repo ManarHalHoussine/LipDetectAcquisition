@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier la transcription</title>
+</head>
+<body>
+<h2>Modifier la transcription</h2>
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>Début (ms)</th>
+            <th>Fin (ms)</th>
+            <th>Mot</th>
+        </tr>
+        {% for line in transcription %}
+            <tr>
+                <td><input type="text" value="{{ line.start }}" readonly></td>
+                <td><input type="text" value="{{ line.end }}" readonly></td>
+                <td>
+                    <input type="text" name="word_{{ forloop.counter0 }}" value="{{ line.word }}">
+                    <input type="hidden" name="start_{{ forloop.counter0 }}" value="{{ line.start }}">
+                    <input type="hidden" name="end_{{ forloop.counter0 }}" value="{{ line.end }}">
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <input type="hidden" name="line_count" value="{{ transcription|length }}">
+    <br>
+    <button type="submit">Enregistrer</button>
+    <a href="{% url 'home' %}"><button type="button">Annuler</button></a>
+</form>
+</body>
+</html>

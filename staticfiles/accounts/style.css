@@ -171,3 +171,17 @@ button:disabled {
 #videosList button:hover {
     background-color: #7b2cbf;
 }
+
+#notification {
+    background-color: white;
+    color: black;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    border-radius: 6px;
+    display: none;
+    z-index: 9999;
+}
+
+
