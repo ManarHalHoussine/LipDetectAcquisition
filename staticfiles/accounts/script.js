@@ -103,41 +103,46 @@ window.addEventListener('DOMContentLoaded', () => {
         notification.style.display = 'none';
     }
 
-    function uploadAndDetect(blob) {
-        const formData = new FormData();
-        formData.append('video', blob);
+function uploadAndDetect(blob) {
+    const formData = new FormData();
+    formData.append('video', blob);
 
-        showLoader("📤 Envoi de la vidéo...");
+    showLoader("📤 Envoi de la vidéo...");
 
-        fetch('/upload/', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log("✅ Upload réussi :", data);
-            showLoader("🛠️ Détection en cours...");
-            return detectLips(data.temp_path);
-        })
-        .then(resp => resp.json())
-        .then(result => {
-            console.log("✅ Résultat détection :", result);
-            if (result.success && result.data) {
-                const { prediction, confidence } = result.data;
-                notification.innerHTML = `🗣️ Mot détecté : <b>${prediction}</b> (confiance : ${Math.round(confidence * 100)}%)`;
-                notification.style.display = 'block';
-            } else {
-                notification.innerText = "⚠️ Aucun résultat détecté.";
-                notification.style.display = 'block';
-                console.warn("Réponse vide ou incomplète :", result);
-            }
-        })
-        .catch(err => {
-            console.error("❌ Erreur :", err);
-            alert(err.message || "Erreur pendant le processus.");
-        })
-        .finally(() => hideLoader());
-    }
+    fetch('/upload/', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("✅ Upload réussi :", data);
+        showLoader("🛠️ Détection en cours...");
+        return detectLips(data.temp_path);
+    })
+    .then(resp => {
+        if (!resp.ok) {
+            throw new Error("Erreur HTTP: " + resp.status);
+        }
+        return resp.json();
+    })
+    .then(result => {
+        console.log("✅ Résultat détection :", result);
+        if (result.success && result.data) {
+            const { prediction, confidence } = result.data;
+            notification.innerHTML = `🗣️ Mot détecté : <b>${prediction}</b> (confiance : ${Math.round(confidence * 100)}%)`;
+            notification.style.display = 'block';
+        } else {
+            notification.innerText = "⚠️ Aucun résultat détecté.";
+            notification.style.display = 'block';
+            console.warn("Réponse vide ou incomplète :", result);
+        }
+    })
+    .catch(err => {
+        console.error("❌ Erreur :", err);
+        alert(err.message || "Erreur pendant le processus.");
+    })
+    .finally(() => hideLoader());
+}
 
     function detectLips(tempPath) {
         const formData = new FormData();

@@ -159,7 +159,7 @@ def upload_video(request):
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
-
+import whisper
 @csrf_exempt
 @login_required
 def detect_lips(request):
@@ -287,7 +287,7 @@ def detect_lips(request):
         clip = VideoFileClip(final_output_path)
         audio_path = final_output_path.replace('.webm', '.wav')
         clip.audio.write_audiofile(audio_path, codec='pcm_s16le')
-        import whisper
+
         model = whisper.load_model("base")
         result = model.transcribe(audio_path, word_timestamps=True)
         simple_transcription = result["text"].strip()
